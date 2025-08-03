@@ -42,3 +42,46 @@ struct ForgotPasswordView: View {
         .padding()
     }
 }
+
+#if DEBUG
+import ComposableArchitecture
+
+struct ForgotPasswordView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            ForgotPasswordView(
+                store: Store(initialState: ForgotPasswordFeature.State()) {
+                    ForgotPasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Default")
+
+        NavigationStack {
+            ForgotPasswordView(
+                store: Store(initialState: {
+                    var state = ForgotPasswordFeature.State()
+                    state.isLoading = true
+                    return state
+                }()) {
+                    ForgotPasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Loading")
+
+        NavigationStack {
+            ForgotPasswordView(
+                store: Store(initialState: {
+                    var state = ForgotPasswordFeature.State()
+                    state.error = "Email not found."
+                    return state
+                }()) {
+                    ForgotPasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Error")
+    }
+}
+#endif

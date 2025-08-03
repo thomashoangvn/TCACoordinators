@@ -20,3 +20,25 @@ struct MyApp: App {
         }
     }
 }
+
+#Preview("Auth Flow") {
+    MyAppCoordinatorView(
+        store: Store(initialState: MyAppCoordinator.State()) {
+            MyAppCoordinator()
+        }
+    )
+}
+
+#Preview("Logged In Flow") {
+    MyAppCoordinatorView(
+        store: Store(
+            initialState: {
+                var state = MyAppCoordinator.State()
+                state.statusIndexselected = .loggedIn
+                return state
+            }()
+        ) {
+            MyAppCoordinator()
+        }
+    )
+}

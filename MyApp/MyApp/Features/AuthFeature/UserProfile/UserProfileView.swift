@@ -61,3 +61,67 @@ struct UserProfileView: View {
         }
     }
 }
+
+private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com")
+
+#Preview("Logged In") {
+    NavigationView {
+        UserProfileView(
+            store: Store(
+                initialState: UserProfileFeature.State(user: thomas)
+            ) {
+                UserProfileFeature()
+            } withDependencies: {
+                $0.userSession.user = .init(thomas)
+            }
+        )
+    }
+}
+
+#Preview("Guest") {
+    NavigationView {
+        UserProfileView(
+            store: Store(initialState: UserProfileFeature.State(user: nil)) {
+                UserProfileFeature()
+            } withDependencies: {
+                $0.userSession.user = .init(nilLiteral: ())
+            }
+        )
+    }
+}
+
+#Preview("Loading") {
+    NavigationView {
+        UserProfileView(
+            store: Store(
+                initialState: {
+                    var state = UserProfileFeature.State(user: thomas)
+                    state.isLoading = true
+                    return state
+                }()
+            ) {
+                UserProfileFeature()
+            } withDependencies: {
+                $0.userSession.user = .init(thomas)
+            }
+        )
+    }
+}
+
+#Preview("Error") {
+    NavigationView {
+        UserProfileView(
+            store: Store(
+                initialState: {
+                    var state = UserProfileFeature.State(user: thomas)
+                    state.error = "Could not log out. Please try again."
+                    return state
+                }()
+            ) {
+                UserProfileFeature()
+            } withDependencies: {
+                $0.userSession.user = .init(thomas)
+            }
+        )
+    }
+}

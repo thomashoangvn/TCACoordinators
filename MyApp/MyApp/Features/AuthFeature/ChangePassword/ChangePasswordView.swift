@@ -51,5 +51,58 @@ struct ChangePasswordView: View {
         .task {
             store.send(.task)
         }
+        .navigationTitle("Change Password")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#if DEBUG
+import ComposableArchitecture
+
+struct ChangePasswordView_Previews: PreviewProvider {
+    static let user = User(id: UUID(), name: "Blob", email: "blob@example.com")
+
+    static var previews: some View {
+        NavigationStack {
+            ChangePasswordView(
+                store: Store(
+                    initialState: ChangePasswordFeature.State(user: user)
+                ) {
+                    ChangePasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Default")
+
+        NavigationStack {
+            ChangePasswordView(
+                store: Store(
+                    initialState: {
+                        var state = ChangePasswordFeature.State(user: user)
+                        state.isLoading = true
+                        return state
+                    }()
+                ) {
+                    ChangePasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Loading")
+
+        NavigationStack {
+            ChangePasswordView(
+                store: Store(
+                    initialState: {
+                        var state = ChangePasswordFeature.State(user: user)
+                        state.error = "The old password is not correct."
+                        return state
+                    }()
+                ) {
+                    ChangePasswordFeature()
+                }
+            )
+        }
+        .previewDisplayName("Error")
+    }
+}
+#endif

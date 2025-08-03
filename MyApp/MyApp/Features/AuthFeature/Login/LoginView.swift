@@ -44,5 +44,62 @@ struct LoginView: View {
             
         }
         .padding()
+        .navigationTitle("Login")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#if DEBUG
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            LoginView(
+                store: Store(initialState: LoginFeature.State()) {
+                    LoginFeature()
+                }
+            )
+        }
+        .previewDisplayName("Default")
+
+        NavigationStack {
+            LoginView(
+                store: Store(initialState: {
+                    var state = LoginFeature.State()
+                    state.email = "blob@example.com"
+                    state.password = "password"
+                    return state
+                }()) {
+                    LoginFeature()
+                }
+            )
+        }
+        .previewDisplayName("Input Filled")
+
+        NavigationStack {
+            LoginView(
+                store: Store(initialState: {
+                    var state = LoginFeature.State()
+                    state.isLoading = true
+                    return state
+                }()) {
+                    LoginFeature()
+                }
+            )
+        }
+        .previewDisplayName("Loading")
+
+        NavigationStack {
+            LoginView(
+                store: Store(initialState: {
+                    var state = LoginFeature.State()
+                    state.error = "Invalid email or password."
+                    return state
+                }()) {
+                    LoginFeature()
+                }
+            )
+        }
+        .previewDisplayName("Error")
+    }
+}
+#endif

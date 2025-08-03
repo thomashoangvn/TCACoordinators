@@ -85,8 +85,70 @@ struct DeleteAccountView: View {
         }
         .padding()
         .navigationTitle("Delete Account")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             store.send(.task)
         }
     }
 }
+
+#if DEBUG
+import ComposableArchitecture
+
+struct DeleteAccountView_Previews: PreviewProvider {
+    static let user = User(id: UUID(), name: "Blob", email: "blob@example.com")
+
+    static var previews: some View {
+        NavigationStack {
+            DeleteAccountView(
+                store: Store(initialState: DeleteAccountFeature.State(user: user)) {
+                    DeleteAccountFeature()
+                }
+            )
+        }
+        .previewDisplayName("Default")
+
+        NavigationStack {
+            DeleteAccountView(
+                store: Store(initialState: {
+                    var state = DeleteAccountFeature.State(user: user)
+                    state.selectedReasons = ["Bad experience with mobile app", "Other"]
+                    state.otherReasonText = "The UI is confusing."
+                    state.password = "password123"
+                    state.iConfirm = true
+                    return state
+                }()) {
+                    DeleteAccountFeature()
+                }
+            )
+        }
+        .previewDisplayName("Input Filled")
+
+        NavigationStack {
+            DeleteAccountView(
+                store: Store(initialState: {
+                    var state = DeleteAccountFeature.State(user: user)
+                    state.isLoading = true
+                    return state
+                }()) {
+                    DeleteAccountFeature()
+                }
+            )
+        }
+        .previewDisplayName("Loading")
+
+        NavigationStack {
+            DeleteAccountView(
+                store: Store(initialState: {
+                    var state = DeleteAccountFeature.State(user: user)
+                    state.error = "Password is required to delete your account."
+                    return state
+                }()) {
+                    DeleteAccountFeature()
+                }
+            )
+        }
+        .previewDisplayName("Error")
+    }
+}
+#endif

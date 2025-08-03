@@ -48,3 +48,31 @@ struct SettingsView: View {
         .padding(.top)
     }
 }
+
+private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com")
+
+struct SettingsView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationStack {
+            SettingsView(
+                store: Store(initialState: SettingsFeature.State(user: thomas)) {
+                    SettingsFeature()
+                } withDependencies: {
+                    $0.userSession.user = .init(thomas)
+                }
+            )
+        }
+        .previewDisplayName("Logged In")
+
+        NavigationStack {
+            SettingsView(
+                store: Store(initialState: SettingsFeature.State(user: nil)) {
+                    SettingsFeature()
+                } withDependencies: {
+                    $0.userSession.user = .init(nilLiteral: () )
+                }
+            )
+        }
+        .previewDisplayName("Guest")
+    }
+}
