@@ -59,6 +59,8 @@ struct MainTabCoordinator {
         
     }
     
+    @Dependency(\.appLogger) var logger
+    
     var body: some ReducerOf<Self> {
         Scope(state: \.indexed, action: \.indexed) {
             IndexedCoordinator()
@@ -98,6 +100,7 @@ struct MainTabCoordinator {
             }
             return .none
         }
+        .observe(using: logger)
     }
 }
 

@@ -40,6 +40,8 @@ struct MyAppCoordinator {
             }
         }
     }
+
+    @Dependency(\.appLogger) var logger
     
     var body: some ReducerOf<Self> {
         Scope(state: \.auth, action: \.auth) {
@@ -112,6 +114,7 @@ struct MyAppCoordinator {
             }
             return .none
         }
+        .observe(using: logger)
         
     }
     

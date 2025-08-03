@@ -102,6 +102,8 @@ struct AuthCoordinator {
         }
     }
     
+    @Dependency(\.appLogger) var logger
+    
     var body: some ReducerOf<Self> {
         Reduce<State, Action> { state, action in
             // Chỉ xử lý các action từ router (các màn hình con)
@@ -218,6 +220,6 @@ struct AuthCoordinator {
             return .none
         }
         .forEachRoute(\.routes, action: \.router)
-        
+        .observe(using: logger)
     }
 }

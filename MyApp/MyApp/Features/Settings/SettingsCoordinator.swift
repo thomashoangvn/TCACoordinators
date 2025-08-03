@@ -69,6 +69,8 @@ struct SettingsCoordinator {
         }
     }
     
+    @Dependency(\.appLogger) var logger
+    
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -80,5 +82,6 @@ struct SettingsCoordinator {
             }
         }
         .forEachRoute(\.routes, action: \.router)
+        .observe(using: logger)
     }
 }
