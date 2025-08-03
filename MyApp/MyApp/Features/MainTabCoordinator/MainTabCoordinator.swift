@@ -46,7 +46,7 @@ struct MainTabCoordinator {
             app: .initialState,
             form: .initialState,
             settings: .initialState,
-            selectedTab: .app
+            selectedTab: .indexed
         )
         
         var identified: IdentifiedCoordinator.State

@@ -23,11 +23,22 @@ struct MyAppCoordinator {
     
     @ObservableState
     struct State: Equatable {
-        var statusIndexselected: StatusIndexState = .auth
+        var statusIndexselected: StatusIndexState
         
         var auth = AuthCoordinator.State.initialState
         var loggedIn = MainTabCoordinator.State.initialState
 
+        init() {
+            // Kiểm tra phiên người dùng hợp lệ khi khởi động.
+            if let user = UserSession.shared.user, user.token.expiresAt > Date() {
+                // Nếu có token hợp lệ và chưa hết hạn, chuyển đến trạng thái đã đăng nhập.
+                self.statusIndexselected = .loggedIn
+            } else {
+                // Nếu không, chuyển đến luồng xác thực và xoá mọi phiên đã hết hạn.
+                UserSession.shared.user = nil
+                self.statusIndexselected = .auth
+            }
+        }
     }
     
     var body: some ReducerOf<Self> {

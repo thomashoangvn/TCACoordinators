@@ -62,7 +62,7 @@ struct UserProfileView: View {
     }
 }
 
-private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com")
+private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com", token: .init(value: "preview-token", expiresAt: .distantFuture))
 
 #Preview("Logged In") {
     NavigationView {

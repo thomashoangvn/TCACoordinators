@@ -49,7 +49,7 @@ struct SettingsView: View {
     }
 }
 
-private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com")
+private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com", token: .init(value: "preview-token", expiresAt: .distantFuture))
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

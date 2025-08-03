@@ -96,7 +96,7 @@ struct DeleteAccountView: View {
 import ComposableArchitecture
 
 struct DeleteAccountView_Previews: PreviewProvider {
-    static let user = User(id: UUID(), name: "Blob", email: "blob@example.com")
+    static let user = User(id: UUID(), name: "Blob", email: "blob@example.com", token: .init(value: "preview-token", expiresAt: .distantFuture))
 
     static var previews: some View {
         NavigationStack {
