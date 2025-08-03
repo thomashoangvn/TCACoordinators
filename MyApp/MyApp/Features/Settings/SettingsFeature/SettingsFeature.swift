@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import TCAComposer
 import SwiftUI
 
 @Reducer
@@ -16,6 +17,7 @@ struct SettingsFeature {
         var user: User?
     }
     
+    @CasePathable
     enum Action {
         case task
         case userUpdated(User?)
@@ -24,9 +26,8 @@ struct SettingsFeature {
         /// Một action được gửi khi người dùng nhấn vào nút đăng nhập.
         case loginButtonTapped
         
-        /// Các action có thể được ủy thác cho một reducer cha.
         case delegate(Delegate)
-        
+        @CasePathable
         enum Delegate {
             /// Thông báo cho parent rằng nút hồ sơ đã được nhấn.
             case profileTapped(User)

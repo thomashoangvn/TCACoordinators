@@ -35,8 +35,9 @@ struct ChangePasswordFeature {
         case changePasswordTapped
         case cancelChangePasswordButtonTapped
         case changePasswordResponse(Result<User, ErrorEquatable>)
-        case delegate(Delegate)
         
+        case delegate(Delegate)
+        @CasePathable
         enum Delegate: Equatable {
             case changePasswordSuccessful(User)
             case cancelChangePassword

@@ -22,6 +22,7 @@ struct LoginFeature {
         case loginResponse(Result<User, ErrorEquatable>)
         
         case delegate(Delegate)
+        @CasePathable
         enum Delegate: Equatable {
             case didTapForgotPassWord
             case skip

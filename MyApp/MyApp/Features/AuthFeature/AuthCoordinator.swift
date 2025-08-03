@@ -83,11 +83,12 @@ struct AuthCoordinator {
         
         var routes: IdentifiedArrayOf<Route<ScreenAuth.State>>
     }
-    
+    @CasePathable
     enum Action {
         case router(IdentifiedRouterActionOf<ScreenAuth>)
         case delegate(Delegate)
 
+        @CasePathable
         enum Delegate {
             case goBackMainTab
             

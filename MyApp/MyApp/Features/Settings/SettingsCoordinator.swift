@@ -48,10 +48,12 @@ struct SettingsCoordinator {
         var routes: IdentifiedArrayOf<Route<ScreenSetting.State>>
     }
     
+    @CasePathable
     enum Action {
         case router(IdentifiedRouterActionOf<ScreenSetting>)
+
         case delegate(Delegate)
-        
+        @CasePathable
         enum Delegate: Sendable {
             case profileTapped(User)
             case loginButtonTapped

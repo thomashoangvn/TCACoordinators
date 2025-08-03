@@ -27,6 +27,7 @@ struct ForgotPasswordFeature {
         case forgotPasswordResponse(Result<String, ErrorEquatable>)
         case delegate(Delegate)
         
+        @CasePathable
         enum Delegate: Equatable {
             case sendForgotSuccessful(String)
             case skip

@@ -87,6 +87,7 @@
 				E95B6E872E3DCDC80090B9BC /* MyApp */,
 				E95B6E982E3DCE030090B9BC /* MyAppTests */,
 				E95B6EA22E3DCE030090B9BC /* MyAppUITests */,
+				E9EFEE042E3F122500A90E8D /* Frameworks */,
 				E95B6E862E3DCDC80090B9BC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,6 +100,13 @@
 				E95B6E9F2E3DCE030090B9BC /* MyAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E9EFEE042E3F122500A90E8D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

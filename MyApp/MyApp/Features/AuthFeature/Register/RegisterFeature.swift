@@ -23,6 +23,7 @@ struct RegisterFeature {
         case registerResponse(Result<User, ErrorEquatable>)
         
         case delegate(Delegate)
+        @CasePathable
         enum Delegate: Equatable {
             case registerSuccessful(User)
             case didTapLogin

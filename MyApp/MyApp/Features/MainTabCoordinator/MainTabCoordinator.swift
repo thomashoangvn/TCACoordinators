@@ -30,6 +30,7 @@ struct MainTabCoordinator {
         case tabSelected(Tab)
         
         case delegate(Delegate)
+        @CasePathable
         enum Delegate: Sendable {
             case profileTapped(User)
             case loginButtonTapped

@@ -14,7 +14,7 @@ struct MyAppCoordinator {
     enum StatusIndexState: Hashable {
         case firstLaunch, splash, loggedIn, auth 
     }
-    
+    @CasePathable
     enum Action {
         case setStatusIndexStateSelected(StatusIndexState)
         case auth(AuthCoordinator.Action)

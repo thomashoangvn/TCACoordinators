@@ -23,7 +23,8 @@ struct UserProfileFeature {
             self.user = user
         }
     }
-    
+
+    @CasePathable
     enum Action {
         case task
         case userUpdated(User?)
@@ -35,6 +36,7 @@ struct UserProfileFeature {
         case deleteAccountButtonTapped(_ user: User)
         
         case delegate(Delegate)
+        @CasePathable
         enum Delegate: Equatable {
             case didTapLogin
             case didLogout

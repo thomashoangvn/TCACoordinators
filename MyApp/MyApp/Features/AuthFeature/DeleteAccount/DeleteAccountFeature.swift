@@ -48,6 +48,7 @@ struct DeleteAccountFeature {
         case deleteAccountResponse(Result<User, ErrorEquatable>)
         
         case delegate(Delegate)
+        @CasePathable
         enum Delegate: Equatable {
             case deleteAccountSuccessful(User)
             case cancelDelete
