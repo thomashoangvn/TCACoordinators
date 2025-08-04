@@ -49,7 +49,7 @@ struct ForgotPasswordFeature {
                 state.error = nil
                 return .run { [email = state.email] send in
                     await send(.forgotPasswordResponse(
-                        await Result { try await self.authService.forgotPassword(email: email) }
+                        await Result { try await self.authService.forgotPassword(email) }
                             .mapError {
                                 ($0 as? ErrorEquatable) ?? ErrorEquatable(message: $0.localizedDescription)
                             }

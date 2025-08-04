@@ -15,17 +15,15 @@ struct ChangePasswordFeature {
         let id = UUID()
 
         var user: User?
-        var email: String
+        var email: String = ""
         var oldPassword: String = ""
         var password: String = ""
         var confirmPassword: String = ""
         var isLoading = false
         var error: String?
 
-        init(user: User) {
-            self.user = user
-            self.email = user.email
-        }
+        // State sẽ được khởi tạo trống và tự cập nhật từ UserSession.
+        init() {}
     }
     
     enum Action: BindableAction, Equatable {
@@ -39,7 +37,7 @@ struct ChangePasswordFeature {
         case delegate(Delegate)
         @CasePathable
         enum Delegate: Equatable {
-            case changePasswordSuccessful(User)
+            case changePasswordSuccessful
             case cancelChangePassword
             case sessionExpired
         }
@@ -62,6 +60,7 @@ struct ChangePasswordFeature {
                 
             case let .userUpdated(user):
                 state.user = user
+                state.email = user?.email ?? ""
                 if user == nil {
                     return .send(.delegate(.sessionExpired))
                 }
@@ -80,7 +79,7 @@ struct ChangePasswordFeature {
                 state.error = nil
                 return .run { [email = state.email, password = state.password, oldPassword = state.oldPassword] send in
                     await send(.changePasswordResponse(
-                        await Result { try await self.authService.changePassword(email: email, password: password, oldPassword: oldPassword) }
+                        await Result { try await self.authService.changePassword(email, password, oldPassword) }
                             .mapError {
                                 ($0 as? ErrorEquatable) ?? ErrorEquatable(message: $0.localizedDescription)
                             }
@@ -90,7 +89,7 @@ struct ChangePasswordFeature {
             case let .changePasswordResponse(.success(user)):
                 state.isLoading = false
                 print("change password: \(user)")
-                return .send(.delegate(.changePasswordSuccessful(user)))
+                return .send(.delegate(.changePasswordSuccessful))
                 
             case let .changePasswordResponse(.failure(error)):
                 state.isLoading = false

@@ -48,7 +48,7 @@ struct RegisterFeature {
                 state.error = nil
                 return .run { [email = state.email, password = state.password] send in
                     await send(.registerResponse(
-                        await Result { try await self.authService.register(email: email, password: password) }
+                        await Result { try await self.authService.register(email, password) }
                             .mapError {
                                 ($0 as? ErrorEquatable) ?? ErrorEquatable(message: $0.localizedDescription)
                             }

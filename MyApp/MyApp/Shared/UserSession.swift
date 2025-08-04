@@ -20,11 +20,16 @@ final class UserSession: ObservableObject {
     private let userAccount = "currentUser"
     private let service: String
 
-    private init() {
-        // Lấy bundle identifier để tạo một service key duy nhất.
-        self.service = Bundle.main.bundleIdentifier ?? "com.myapp.usersession"
+    // Designated initializer, internal for testing.
+    internal init(service: String) {
+        self.service = service
         // Khi UserSession được khởi tạo, hãy thử tải người dùng từ Keychain.
         self.user = loadUserFromKeychain()
+    }
+    
+    // Convenience initializer for the shared singleton instance.
+    private convenience init() {
+        self.init(service: Bundle.main.bundleIdentifier ?? "com.myapp.usersession")
     }
     
     private func saveUserToKeychain(_ user: User) {

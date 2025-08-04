@@ -8,14 +8,16 @@
 import ComposableArchitecture
 import SwiftUI
 import TCACoordinators
+import Foundation
 
 @Reducer
 struct MyAppCoordinator {
     enum StatusIndexState: Hashable {
-        case firstLaunch, splash, loggedIn, auth 
+        case firstLaunch, splash, loggedIn, auth
     }
     @CasePathable
     enum Action {
+        case task
         case setStatusIndexStateSelected(StatusIndexState)
         case auth(AuthCoordinator.Action)
         case loggedIn(MainTabCoordinator.Action)
@@ -24,24 +26,19 @@ struct MyAppCoordinator {
     @ObservableState
     struct State: Equatable {
         var statusIndexselected: StatusIndexState
+        var auth: AuthCoordinator.State
+        var loggedIn: MainTabCoordinator.State
         
-        var auth = AuthCoordinator.State.initialState
-        var loggedIn = MainTabCoordinator.State.initialState
-
         init() {
-            // Kiểm tra phiên người dùng hợp lệ khi khởi động.
-            if let user = UserSession.shared.user, user.token.expiresAt > Date() {
-                // Nếu có token hợp lệ và chưa hết hạn, chuyển đến trạng thái đã đăng nhập.
-                self.statusIndexselected = .loggedIn
-            } else {
-                // Nếu không, chuyển đến luồng xác thực và xoá mọi phiên đã hết hạn.
-                UserSession.shared.user = nil
-                self.statusIndexselected = .auth
-            }
+            self.auth = .initialState
+            self.loggedIn = .initialState
+            // Bắt đầu ở trạng thái trung gian, để action `.task` quyết định luồng đi.
+            self.statusIndexselected = .splash
         }
     }
-
+    
     @Dependency(\.appLogger) var logger
+    @Dependency(\.userSession) var userSession
     
     var body: some ReducerOf<Self> {
         Scope(state: \.auth, action: \.auth) {
@@ -51,62 +48,60 @@ struct MyAppCoordinator {
         Scope(state: \.loggedIn, action: \.loggedIn) {
             MainTabCoordinator()
         }
-
         
         Reduce { state, action in
             switch action {
+            case .task:
+                if let user = self.userSession.user, user.token.expiresAt > Date() {
+                    // Nếu có token hợp lệ và chưa hết hạn, chuyển sang trạng thái đã đăng nhập.
+                    state.statusIndexselected = .loggedIn
+                } else {
+                    // Nếu không, chuyển sang luồng xác thực và xoá session đã hết hạn.
+                    self.userSession.user = nil
+                    state.statusIndexselected = .auth
+                }
                 
             case let .auth(.delegate(.didLoginSuccessfully(user))):
                 state.statusIndexselected = .loggedIn
                 state.loggedIn.selectedTab = .indexed
-                UserSession.shared.user = user
-                return .none
+                self.userSession.user = user
                 
             case .auth(.delegate(.skipAuth)):
                 state.statusIndexselected = .loggedIn
-                UserSession.shared.user = nil
-                return .none
+                self.userSession.user = nil
                 
-            case let .auth(.delegate(.didChangePasswordSuccessfully(user))):
+            case .auth(.delegate(.didChangePasswordSuccessfully)):
                 state.statusIndexselected = .loggedIn
-                return .none
-
+                
             case .auth(.delegate(.cancelChangePassword)):
                 state.statusIndexselected = .loggedIn
-                return .none
-
+                
             case .auth(.delegate(.goBackMainTab)):
                 state.statusIndexselected = .loggedIn
-                return .none
-
+                
             case .auth(.delegate(.didLogout)):
                 state.statusIndexselected = .auth
-                state.auth = .initialState 
-                UserSession.shared.user = nil
-                return .none
+                state.auth = .initialState
+                self.userSession.user = nil
                 
             case .auth(.delegate(.didDeleteAccountSuccessfully)):
                 state.statusIndexselected = .auth
                 state.auth = .initialState
-                UserSession.shared.user = nil
-                return .none
-
+                self.userSession.user = nil
+                
             case .auth(.delegate(.cancelDeleteAccount)):
                 state.statusIndexselected = .loggedIn
-                return .none
-
-            case let .loggedIn(.delegate(.profileTapped(user))):
+                
+            case .loggedIn(.delegate(.profileTapped)):
                 state.statusIndexselected = .auth
-                state.auth.routes.push(.userProfileScreen(.init(user: user)))
-                return .none
+                state.auth.routes.push(.userProfileScreen(.init()))
                 
             case .loggedIn(.delegate(.loginButtonTapped)):
                 state.statusIndexselected = .auth
                 state.auth.routes.goBackToRoot()
-                return .none
                 
             case .auth, .loggedIn:
-                return .none
+                break
                 
             case let .setStatusIndexStateSelected(index):
                 state.statusIndexselected = index
@@ -125,25 +120,26 @@ struct MyAppCoordinatorView: View {
     @Bindable var store: StoreOf<MyAppCoordinator>
     
     var body: some View {
-        WithPerceptionTracking {
-            VStack {
-                switch store.statusIndexselected {
-                case .firstLaunch:
-                    Text("firstLaunch")
-                case .splash:
-                    Text("splash")
-                case .auth:
-                    AuthCoordinatorView(
-                        store: store.scope(
-                            state: \.auth,
-                            action: \.auth
-                        )
+        VStack {
+            switch store.statusIndexselected {
+            case .firstLaunch:
+                Text("firstLaunch")
+            case .splash:
+                Text("splash")
+            case .auth:
+                AuthCoordinatorView(
+                    store: store.scope(
+                        state: \.auth,
+                        action: \.auth
                     )
-                case .loggedIn:
-                    MainTabCoordinatorView(store: store.scope(state: \.loggedIn, action: \.loggedIn))
-                    
-                }
+                )
+            case .loggedIn:
+                MainTabCoordinatorView(store: store.scope(state: \.loggedIn, action: \.loggedIn))
+                
             }
+        }
+        .onAppear {
+            store.send(.task)
         }
     }
 }

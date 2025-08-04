@@ -55,13 +55,13 @@ struct SettingsCoordinator {
         case delegate(Delegate)
         @CasePathable
         enum Delegate: Sendable {
-            case profileTapped(User)
+            case profileTapped
             case loginButtonTapped
             
             init(action: SettingsFeature.Action.Delegate) {
                 switch action {
-                case let .profileTapped(user):
-                    self = .profileTapped(user)
+                case .profileTapped:
+                    self = .profileTapped
                 case .loginButtonTapped:
                     self = .loginButtonTapped
                 }

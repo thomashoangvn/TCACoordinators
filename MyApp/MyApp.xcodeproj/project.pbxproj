@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E95B6EB42E3DCF640090B9BC /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E95B6EB32E3DCF640090B9BC /* ComposableArchitecture */; };
 		E95B6EB72E3DCF920090B9BC /* TCAComposer in Frameworks */ = {isa = PBXBuildFile; productRef = E95B6EB62E3DCF920090B9BC /* TCAComposer */; };
 		E95B6EBA2E3DCFD10090B9BC /* TCACoordinators in Frameworks */ = {isa = PBXBuildFile; productRef = E95B6EB92E3DCFD10090B9BC /* TCACoordinators */; };
+		E9E4419E2E40AF3000C396DD /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E9E4419D2E40AF3000C396DD /* ComposableArchitecture */; };
+		E9E441A52E40B0C500C396DD /* XCTestDynamicOverlay in Frameworks */ = {isa = PBXBuildFile; productRef = E9E441A42E40B0C500C396DD /* XCTestDynamicOverlay */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,8 +59,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E95B6EB42E3DCF640090B9BC /* ComposableArchitecture in Frameworks */,
 				E95B6EBA2E3DCFD10090B9BC /* TCACoordinators in Frameworks */,
+				E9E4419E2E40AF3000C396DD /* ComposableArchitecture in Frameworks */,
+				E9E441A52E40B0C500C396DD /* XCTestDynamicOverlay in Frameworks */,
 				E95B6EB72E3DCF920090B9BC /* TCAComposer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -129,9 +131,10 @@
 			);
 			name = MyApp;
 			packageProductDependencies = (
-				E95B6EB32E3DCF640090B9BC /* ComposableArchitecture */,
 				E95B6EB62E3DCF920090B9BC /* TCAComposer */,
 				E95B6EB92E3DCFD10090B9BC /* TCACoordinators */,
+				E9E4419D2E40AF3000C396DD /* ComposableArchitecture */,
+				E9E441A42E40B0C500C396DD /* XCTestDynamicOverlay */,
 			);
 			productName = MyApp;
 			productReference = E95B6E852E3DCDC80090B9BC /* MyApp.app */;
@@ -216,9 +219,10 @@
 			mainGroup = E95B6E7C2E3DCDC70090B9BC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				E95B6EB22E3DCF640090B9BC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				E95B6EB52E3DCF920090B9BC /* XCRemoteSwiftPackageReference "tca-composer" */,
 				E95B6EB82E3DCFD10090B9BC /* XCRemoteSwiftPackageReference "TCACoordinators" */,
+				E9E4419C2E40AF3000C396DD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				E9E4419F2E40B0C500C396DD /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E95B6E862E3DCDC80090B9BC /* Products */;
@@ -585,14 +589,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E95B6EB22E3DCF640090B9BC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.21.0;
-			};
-		};
 		E95B6EB52E3DCF920090B9BC /* XCRemoteSwiftPackageReference "tca-composer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mentalflux/tca-composer.git";
@@ -609,14 +605,25 @@
 				minimumVersion = 0.13.0;
 			};
 		};
+		E9E4419C2E40AF3000C396DD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.21.0;
+			};
+		};
+		E9E4419F2E40B0C500C396DD /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/xctest-dynamic-overlay";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E95B6EB32E3DCF640090B9BC /* ComposableArchitecture */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E95B6EB22E3DCF640090B9BC /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
-			productName = ComposableArchitecture;
-		};
 		E95B6EB62E3DCF920090B9BC /* TCAComposer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E95B6EB52E3DCF920090B9BC /* XCRemoteSwiftPackageReference "tca-composer" */;
@@ -626,6 +633,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E95B6EB82E3DCFD10090B9BC /* XCRemoteSwiftPackageReference "TCACoordinators" */;
 			productName = TCACoordinators;
+		};
+		E9E4419D2E40AF3000C396DD /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9E4419C2E40AF3000C396DD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		E9E441A42E40B0C500C396DD /* XCTestDynamicOverlay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9E4419F2E40B0C500C396DD /* XCRemoteSwiftPackageReference "xctest-dynamic-overlay" */;
+			productName = XCTestDynamicOverlay;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -36,12 +36,12 @@ struct UserProfileView: View {
                 }
                 
                 Button("Change Password") {
-                    store.send(.changePasswordButtonTapped(user), animation: .default)
+                    store.send(.changePasswordButtonTapped, animation: .default)
                 }
                 .padding(.top)
                 
                 Button("Delete Account") {
-                    store.send(.deleteAccountButtonTapped(user), animation: .default)
+                    store.send(.deleteAccountButtonTapped, animation: .default)
                 }
                 .padding(.top)
                 
@@ -56,8 +56,11 @@ struct UserProfileView: View {
         }
         .navigationTitle("Account")
         .navigationBarBackButtonHidden()
-        .task {
-            store.send(.task)
+        .onAppear {
+            store.send(.onAppear)
+        }
+        .onDisappear {
+            store.send(.onDisappear)
         }
     }
 }
@@ -68,9 +71,8 @@ private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com
     NavigationView {
         UserProfileView(
             store: Store(
-                initialState: UserProfileFeature.State(user: thomas)
-            ) {
-                UserProfileFeature()
+                initialState: UserProfileFeature.State()) {
+                    UserProfileFeature()
             } withDependencies: {
                 $0.userSession.user = .init(thomas)
             }
@@ -81,10 +83,8 @@ private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com
 #Preview("Guest") {
     NavigationView {
         UserProfileView(
-            store: Store(initialState: UserProfileFeature.State(user: nil)) {
+            store: Store(initialState: UserProfileFeature.State()) {
                 UserProfileFeature()
-            } withDependencies: {
-                $0.userSession.user = .init(nilLiteral: ())
             }
         )
     }
@@ -94,11 +94,7 @@ private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com
     NavigationView {
         UserProfileView(
             store: Store(
-                initialState: {
-                    var state = UserProfileFeature.State(user: thomas)
-                    state.isLoading = true
-                    return state
-                }()
+                initialState: UserProfileFeature.State(isLoading: true)
             ) {
                 UserProfileFeature()
             } withDependencies: {
@@ -112,11 +108,7 @@ private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com
     NavigationView {
         UserProfileView(
             store: Store(
-                initialState: {
-                    var state = UserProfileFeature.State(user: thomas)
-                    state.error = "Could not log out. Please try again."
-                    return state
-                }()
+                initialState: UserProfileFeature.State(error: "Could not log out. Please try again.")
             ) {
                 UserProfileFeature()
             } withDependencies: {

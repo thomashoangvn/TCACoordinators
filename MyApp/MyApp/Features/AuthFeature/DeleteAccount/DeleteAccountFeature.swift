@@ -24,7 +24,7 @@ struct DeleteAccountFeature {
         ]
 
         var user: User?
-        var email: String
+        var email: String = ""
         var password: String = ""
         var selectedReasons: [String] = []
         var otherReasonText: String = ""
@@ -32,10 +32,7 @@ struct DeleteAccountFeature {
         var isLoading = false
         var error: String?
 
-        init(user: User) {
-            self.user = user
-            self.email = user.email
-        }
+        init() {}
     }
     
     enum Action: BindableAction, Equatable {
@@ -73,6 +70,7 @@ struct DeleteAccountFeature {
                 
             case let .userUpdated(user):
                 state.user = user
+                state.email = user?.email ?? ""
                 if user == nil {
                     // Session has expired, notify the parent.
                     return .send(.delegate(.sessionExpired))
@@ -118,7 +116,7 @@ struct DeleteAccountFeature {
                 }
                 return .run { [email = state.email, password = state.password, finalReasons] send in
                     await send(.deleteAccountResponse(
-                        await Result { try await self.authService.deleteAccount(email: email, password: password, selectedReasons: finalReasons) }
+                        await Result { try await self.authService.deleteAccount(email, password, finalReasons) }
                             .mapError {
                                 ($0 as? ErrorEquatable) ?? ErrorEquatable(message: $0.localizedDescription)
                             }

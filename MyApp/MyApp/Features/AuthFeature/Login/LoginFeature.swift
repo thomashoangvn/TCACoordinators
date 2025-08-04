@@ -42,7 +42,7 @@ struct LoginFeature {
                 state.error = nil
                 return .run { [email = state.email, password = state.password] send in
                     await send(.loginResponse(
-                        await Result { try await self.authService.login(email: email, password: password) }
+                        await Result { try await self.authService.login(email, password) }
                             .mapError {
                                 ($0 as? ErrorEquatable) ?? ErrorEquatable(message: $0.localizedDescription)
                             }

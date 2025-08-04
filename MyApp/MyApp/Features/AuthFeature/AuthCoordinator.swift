@@ -67,7 +67,7 @@ struct AuthCoordinatorView: View {
                 
             case let .deleteAccountScreen(store):
                 DeleteAccountView(store: store)
-                                
+                
             }
         }
     }
@@ -87,14 +87,14 @@ struct AuthCoordinator {
     enum Action {
         case router(IdentifiedRouterActionOf<ScreenAuth>)
         case delegate(Delegate)
-
+        
         @CasePathable
         enum Delegate {
             case goBackMainTab
             
             case didLoginSuccessfully(User)
             case skipAuth
-            case didChangePasswordSuccessfully(User)
+            case didChangePasswordSuccessfully
             case cancelChangePassword
             case didDeleteAccountSuccessfully(User)
             case cancelDeleteAccount
@@ -122,7 +122,7 @@ struct AuthCoordinator {
                     case .didTapForgotPassWord:
                         state.routes.push(.forgotPasswordScreen(.init()))
                         return .none
-                    
+                        
                     }
                     
                     // Xử lý delegate action từ RegisterScreen
@@ -160,9 +160,9 @@ struct AuthCoordinator {
                     
                 case let .changePasswordScreen(.delegate(delegateAction)):
                     switch delegateAction {
-                    case let .changePasswordSuccessful(user):
+                    case .changePasswordSuccessful:
                         state.routes.goBackToRoot()
-                        return .send(.delegate(.didChangePasswordSuccessfully(user)))
+                        return .send(.delegate(.didChangePasswordSuccessfully))
                     case .cancelChangePassword:
                         state.routes.goBackToRoot()
                         return .send(.delegate(.cancelChangePassword))
@@ -184,7 +184,7 @@ struct AuthCoordinator {
                         // Session đã hết hạn, quay về màn hình đăng nhập và thông báo cho parent.
                         state.routes.goBackToRoot()
                         return .send(.delegate(.didLogout))
-                    
+                        
                     }
                     
                 case let .userProfileScreen(.delegate(delegateAction)):
@@ -194,14 +194,14 @@ struct AuthCoordinator {
                         state.routes.goBackToRoot()
                         return .send(.delegate(.didLogout))
                         
-                    case let .didTapChangePassword(user):
+                    case .didTapChangePassword:
                         // User muốn đổi mật khẩu, điều hướng tới màn hình ChangePassword.
-                        state.routes.push(.changePasswordScreen(.init(user: user)))
+                        state.routes.push(.changePasswordScreen(.init()))
                         return .none
                         
-                    case let .didTapDeleteAccount(user):
+                    case .didTapDeleteAccount:
                         // User muốn xoá tài khoản, điều hướng tới màn hình DeleteAccount.
-                        state.routes.push(.deleteAccountScreen(.init(user: user)))
+                        state.routes.push(.deleteAccountScreen(.init()))
                         return .none
                         
                     case .didTapBack:

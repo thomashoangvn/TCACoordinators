@@ -101,8 +101,10 @@ struct DeleteAccountView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             DeleteAccountView(
-                store: Store(initialState: DeleteAccountFeature.State(user: user)) {
+                store: Store(initialState: DeleteAccountFeature.State()) {
                     DeleteAccountFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }
@@ -111,7 +113,7 @@ struct DeleteAccountView_Previews: PreviewProvider {
         NavigationStack {
             DeleteAccountView(
                 store: Store(initialState: {
-                    var state = DeleteAccountFeature.State(user: user)
+                    var state = DeleteAccountFeature.State()
                     state.selectedReasons = ["Bad experience with mobile app", "Other"]
                     state.otherReasonText = "The UI is confusing."
                     state.password = "password123"
@@ -119,6 +121,8 @@ struct DeleteAccountView_Previews: PreviewProvider {
                     return state
                 }()) {
                     DeleteAccountFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }
@@ -127,11 +131,13 @@ struct DeleteAccountView_Previews: PreviewProvider {
         NavigationStack {
             DeleteAccountView(
                 store: Store(initialState: {
-                    var state = DeleteAccountFeature.State(user: user)
+                    var state = DeleteAccountFeature.State()
                     state.isLoading = true
                     return state
                 }()) {
                     DeleteAccountFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }
@@ -140,11 +146,13 @@ struct DeleteAccountView_Previews: PreviewProvider {
         NavigationStack {
             DeleteAccountView(
                 store: Store(initialState: {
-                    var state = DeleteAccountFeature.State(user: user)
+                    var state = DeleteAccountFeature.State()
                     state.error = "Password is required to delete your account."
                     return state
                 }()) {
                     DeleteAccountFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }

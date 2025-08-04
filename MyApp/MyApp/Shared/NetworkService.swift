@@ -1,16 +1,16 @@
 import Foundation
+import Dependencies
 
-protocol AuthServiceProtocol {
-    func logout(user: User) async throws -> User
-    func login(email: String, password: String) async throws -> User
-    func register(email: String, password: String) async throws -> User
-    func forgotPassword(email: String) async throws -> String
-    func changePassword(email: String, password: String, oldPassword: String) async throws -> User
-    func deleteAccount(email: String, password: String, selectedReasons: [String]) async throws -> User
+struct AuthService {
+    var logout: (_ user: User) async throws -> User
+    var login: (_ email: String, _ password: String) async throws -> User
+    var register: (_ email: String, _ password: String) async throws -> User
+    var forgotPassword: (_ email: String) async throws -> String
+    var changePassword: (_ email: String, _ password: String, _ oldPassword: String) async throws -> User
+    var deleteAccount: (_ email: String, _ password: String, _ selectedReasons: [String]) async throws -> User
 }
 
-final class NetworkService: AuthServiceProtocol {
-    static let shared = NetworkService()
+struct NetworkService {
     
     func logout(user: User) async throws -> User {
         try await Task.sleep(for: .seconds(1))

@@ -66,9 +66,11 @@ struct ChangePasswordView_Previews: PreviewProvider {
         NavigationStack {
             ChangePasswordView(
                 store: Store(
-                    initialState: ChangePasswordFeature.State(user: user)
+                    initialState: ChangePasswordFeature.State()
                 ) {
                     ChangePasswordFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }
@@ -78,7 +80,7 @@ struct ChangePasswordView_Previews: PreviewProvider {
             ChangePasswordView(
                 store: Store(
                     initialState: {
-                        var state = ChangePasswordFeature.State(user: user)
+                        var state = ChangePasswordFeature.State()
                         state.isLoading = true
                         return state
                     }()
@@ -93,12 +95,14 @@ struct ChangePasswordView_Previews: PreviewProvider {
             ChangePasswordView(
                 store: Store(
                     initialState: {
-                        var state = ChangePasswordFeature.State(user: user)
+                        var state = ChangePasswordFeature.State()
                         state.error = "The old password is not correct."
                         return state
                     }()
                 ) {
                     ChangePasswordFeature()
+                } withDependencies: {
+                    $0.userSession.user = user
                 }
             )
         }

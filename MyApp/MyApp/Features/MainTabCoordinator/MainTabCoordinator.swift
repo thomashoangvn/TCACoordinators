@@ -32,7 +32,7 @@ struct MainTabCoordinator {
         case delegate(Delegate)
         @CasePathable
         enum Delegate: Sendable {
-            case profileTapped(User)
+            case profileTapped
             case loginButtonTapped
         }
         
@@ -89,8 +89,8 @@ struct MainTabCoordinator {
             case let .tabSelected(tab):
                 state.selectedTab = tab
                 
-            case let .settings(.delegate(.profileTapped(user))):
-                return .send(.delegate(.profileTapped(user)))
+            case .settings(.delegate(.profileTapped)):
+                return .send(.delegate(.profileTapped))
 
             case .settings(.delegate(.loginButtonTapped)):
                 return .send(.delegate(.loginButtonTapped))
@@ -109,58 +109,56 @@ struct MainTabCoordinatorView: View {
     @Bindable var store: StoreOf<MainTabCoordinator>
     
     var body: some View {
-        WithPerceptionTracking {
-            TabView(selection: $store.selectedTab.sending(\.tabSelected)) {
-                IndexedCoordinatorView(
-                    store: store.scope(
-                        state: \.indexed,
-                        action: \.indexed
-                    )
+        TabView(selection: $store.selectedTab.sending(\.tabSelected)) {
+            IndexedCoordinatorView(
+                store: store.scope(
+                    state: \.indexed,
+                    action: \.indexed
                 )
-                .tabItem { Text("Indexed") }
-                .tag(MainTabCoordinator.Tab.indexed)
-                
-                IdentifiedCoordinatorView(
-                    store: store.scope(
-                        state: \.identified,
-                        action: \.identified
-                    )
+            )
+            .tabItem { Text("Indexed") }
+            .tag(MainTabCoordinator.Tab.indexed)
+            
+            IdentifiedCoordinatorView(
+                store: store.scope(
+                    state: \.identified,
+                    action: \.identified
                 )
-                .tabItem { Text("Identified") }
-                .tag(MainTabCoordinator.Tab.identified)
-                
-                AppCoordinatorView(
-                    store: store.scope(
-                        state: \.app,
-                        action: \.app
-                    )
+            )
+            .tabItem { Text("Identified") }
+            .tag(MainTabCoordinator.Tab.identified)
+            
+            AppCoordinatorView(
+                store: store.scope(
+                    state: \.app,
+                    action: \.app
                 )
-                .tabItem { Text("Game") }
-                .tag(MainTabCoordinator.Tab.app)
-                
-                FormAppCoordinatorView(
-                    store: store.scope(
-                        state: \.form,
-                        action: \.form
-                    )
+            )
+            .tabItem { Text("Game") }
+            .tag(MainTabCoordinator.Tab.app)
+            
+            FormAppCoordinatorView(
+                store: store.scope(
+                    state: \.form,
+                    action: \.form
                 )
-                .tabItem { Text("Form") }
-                .tag(MainTabCoordinator.Tab.form)
-                
-                SettingsCoordinatorView(
-                    store: store.scope(
-                        state: \.settings,
-                        action: \.settings
-                    )
+            )
+            .tabItem { Text("Form") }
+            .tag(MainTabCoordinator.Tab.form)
+            
+            SettingsCoordinatorView(
+                store: store.scope(
+                    state: \.settings,
+                    action: \.settings
                 )
-                .tabItem { Text("Settings") }
-                .tag(MainTabCoordinator.Tab.settingsTab)
-                
-            }.onOpenURL { _ in
-                // In reality, the URL would be parsed into a Deeplink.
-                let deeplink = MainTabCoordinator.Deeplink.identified(.showNumber(42))
-                store.send(.deeplinkOpened(deeplink))
-            }
+            )
+            .tabItem { Text("Settings") }
+            .tag(MainTabCoordinator.Tab.settingsTab)
+            
+        }.onOpenURL { _ in
+            // In reality, the URL would be parsed into a Deeplink.
+            let deeplink = MainTabCoordinator.Deeplink.identified(.showNumber(42))
+            store.send(.deeplinkOpened(deeplink))
         }
     }
 }

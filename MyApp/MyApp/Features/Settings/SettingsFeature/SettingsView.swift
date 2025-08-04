@@ -12,19 +12,20 @@ struct SettingsView: View {
     let store: StoreOf<SettingsFeature>
     
     var body: some View {
-        WithPerceptionTracking {
-            VStack(spacing: 20) {
-                if let user = store.user {
-                    userContentView(user)
-                } else {
-                    guestContentView
-                }
+        VStack(spacing: 20) {
+            if let user = store.user {
+                userContentView(user)
+            } else {
+                guestContentView
             }
-            .padding()
-            .navigationTitle("Settings")
-            .task {
-                store.send(.task)
-            }
+        }
+        .padding()
+        .navigationTitle("Settings")
+        .onAppear {
+            store.send(.onAppear)
+        }
+        .onDisappear {
+            store.send(.onDisappear)
         }
     }
     
@@ -55,23 +56,19 @@ struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             SettingsView(
-                store: Store(initialState: SettingsFeature.State(user: thomas)) {
+                store: Store(initialState: SettingsFeature.State()) {
                     SettingsFeature()
                 } withDependencies: {
-                    $0.userSession.user = .init(thomas)
+                    $0.userSession.user = thomas
                 }
             )
         }
         .previewDisplayName("Logged In")
 
         NavigationStack {
-            SettingsView(
-                store: Store(initialState: SettingsFeature.State(user: nil)) {
-                    SettingsFeature()
-                } withDependencies: {
-                    $0.userSession.user = .init(nilLiteral: () )
-                }
-            )
+            SettingsView(store: Store(initialState: SettingsFeature.State()) {
+                SettingsFeature()
+            })
         }
         .previewDisplayName("Guest")
     }
