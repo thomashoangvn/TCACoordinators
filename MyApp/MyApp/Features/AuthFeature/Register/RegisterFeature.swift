@@ -40,8 +40,8 @@ struct RegisterFeature {
         Reduce { state, action in
             switch action {
             case .registerTapped:
-                guard state.password == state.confirmPassword else {
-                    state.error = "Passwords do not match"
+                guard state.password == state.confirmPassword else { 
+                    state.error = "register.error.passwordsDoNotMatch"
                     return .none
                 }
                 state.isLoading = true

@@ -1,8 +1,8 @@
 //
 //  SettingsFeatureTests.swift
-//  MyApp
+//  MyAppTests
 //
-//  Created by Thomas Hoang on 8/3/25.
+//  Created by Thomas Hoang on 8/5/25.
 //
 
 import Foundation
@@ -87,7 +87,7 @@ struct SettingsFeatureTests {
         await store.send(.onDisappear)
         await task.cancel()
     }
-
+    
     @Test func testProfileTapped_whenLoggedOut_doesNothing() async {
         // 1. Khởi tạo store với userSession là nil (guest).
         let userSession = UserSession(service: "test-session") // user is nil by default

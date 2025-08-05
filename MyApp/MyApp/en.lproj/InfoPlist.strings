@@ -1,0 +1,19 @@
+/* 
+  InfoPlist.strings
+  MyApp
+
+  Created by Thomas Hoang on 8/5/25.
+  
+*/
+"NSAppleMusicUsageDescription" = "My App request you to accept media library to play music.";
+"NSBluetoothAlwaysUsageDescription" = "My App request you to accept bluetooth for persistent device connection.";
+"NSBluetoothPeripheralUsageDescription" = "My App request you to accept bluetooth to connect the device.";
+"NSCameraUsageDescription" = "My App request you to accept camera to take profile pictures, upload images, 'scan' document, 'read' QR, 'read' barcode.";
+"NSContactsUsageDescription" = "My App request you to accept contacts for voice calls in the app.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "My App request you to accept location for persistent language support or when using the app.";
+"NSLocationAlwaysUsageDescription" = "My App request you to accept location for persistent language support.";
+"NSLocationWhenInUseUsageDescription" = "My App request you to accept location for language support when using the app.";
+"NSMicrophoneUsageDescription" = "My App request you to accept microphone access making the call in the app.";
+"NSPhotoLibraryAddUsageDescription" = "My App needs you to accept the photo library to take more profile pictures, upload pictures.";
+"NSPhotoLibraryUsageDescription" = "My App request you to accept image library to add profile images, for uploading images.";
+"NSUserTrackingUsageDescription" = "My App request your consent for use of this identifier to personalize ads sent to you.";

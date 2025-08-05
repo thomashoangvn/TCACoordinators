@@ -1,0 +1,113 @@
+/* 
+  Localizable.strings
+  MyApp
+
+*/
+
+"login.screen.title" = "Login";
+"login.email.placeholder" = "Email";
+"login.password.placeholder" = "Password";
+"login.login.button" = "Login";
+"login.register.button" = "Don't have an account? Register";
+"login.skip.button" = "Skip Login";
+"login.forgotPassword.button" = "Forgot Password?";
+
+/* Register Screen */
+"register.screen.title" = "Register";
+"register.email.placeholder" = "Email";
+"register.password.placeholder" = "Password";
+"register.confirmPassword.placeholder" = "Confirm Password";
+"register.register.button" = "Register";
+"register.login.button" = "I have an account. Login";
+"register.skip.button" = "Skip Register";
+"register.error.passwordsDoNotMatch" = "Passwords do not match";
+
+/* User Profile Screen */
+"userProfile.screen.title" = "Account";
+"userProfile.backToMain.button" = "Back To MainTab";
+"userProfile.welcome.user" = "Welcome, %@!";
+"userProfile.welcome.guest" = "Welcome, Guest!";
+"userProfile.logout.button" = "Log Out";
+"userProfile.changePassword.button" = "Change Password";
+"userProfile.deleteAccount.button" = "Delete Account";
+"userProfile.error.logoutFailed" = "Could not log out. Please try again.";
+
+/* Forgot Password Screen */
+"forgotPassword.screen.title" = "Forgot Password";
+"forgotPassword.email.placeholder" = "Email";
+"forgotPassword.submit.button" = "Submit Email";
+"forgotPassword.skip.button" = "Skip";
+"forgotPassword.error.emailNotFound" = "Email not found.";
+
+/* Delete Account Screen */
+"deleteAccount.screen.title" = "Delete Account";
+"deleteAccount.warning.message" = "If you delete your account, all your personal information and associated data from the platform's servers will be forfeited.";
+"deleteAccount.reason.title" = "Reason for leaving";
+"deleteAccount.reason.badExperience" = "Bad experience with mobile app";
+"deleteAccount.reason.noLongerNeeded" = "Don't need the account anymore";
+"deleteAccount.reason.duplicate" = "Duplicated enrolment";
+"deleteAccount.reason.neverRegistered" = "Never registered";
+"deleteAccount.reason.personal" = "Personal reason";
+"deleteAccount.reason.other" = "Other";
+"deleteAccount.otherReason.placeholder" = "Please specify";
+"deleteAccount.password.placeholder" = "Password";
+"deleteAccount.confirm.checkbox" = "I confirm and proceed";
+"deleteAccount.confirm.button" = "Confirm Delete Account";
+"deleteAccount.cancel.button" = "Cancel Delete Account";
+"deleteAccount.error.sessionExpired" = "Your session has expired. Please log in again.";
+"deleteAccount.error.passwordEmpty" = "Password cannot be empty.";
+"deleteAccount.error.noReasonSelected" = "Please select at least one reason for deleting your account.";
+"deleteAccount.error.otherReasonEmpty" = "Please specify your reason in the 'Other' field.";
+"deleteAccount.error.confirmationRequired" = "Please confirm you want to delete your account.";
+
+/* Change Password Screen */
+"changePassword.screen.title" = "Change Password";
+"changePassword.oldPassword.placeholder" = "Old Password";
+"changePassword.newPassword.placeholder" = "New Password";
+"changePassword.confirmPassword.placeholder" = "Confirm New Password";
+"changePassword.submit.button" = "Submit Change Password";
+"changePassword.cancel.button" = "Cancel Change Password";
+"changePassword.error.incorrectOldPassword" = "The old password is not correct.";
+
+/* Settings Screen */
+"settings.screen.title" = "Settings";
+"settings.userProfile.button" = "User Profile";
+
+/* App First Launch Screen */
+
+/* Welcome Step */
+"firstLaunch.welcome.title" = "Welcome to MyApp!";
+"firstLaunch.welcome.subtitle" = "Experience a safe, reliable service that will accompany you for the long term.";
+"firstLaunch.welcome.continue.button" = "Continue";
+
+/* Terms Step */
+"firstLaunch.terms.title" = "Terms & Policies";
+"firstLaunch.terms.termsOfService.tab" = "Terms of Service";
+"firstLaunch.terms.privacyPolicy.tab" = "Privacy Policy";
+"firstLaunch.terms.loading" = "Loading...";
+"firstLaunch.terms.agreeToTerms.checkbox" = "I have read and agree to the terms of service.";
+"firstLaunch.terms.agreeToPolicy.checkbox" = "I have read and agree to the privacy policy.";
+"firstLaunch.terms.agreeAndContinue.button" = "Agree and Continue";
+"firstLaunch.error.loadFailed" = "Could not load terms or policy: %@";
+"firstLaunch.error.loadFailed.generic" = "Could not load content. Please try again.";
+
+/* Notifications Step */
+"firstLaunch.notifications.title" = "Enable Notifications";
+"firstLaunch.notifications.subtitle" = "We will send you important updates and special offers. You can change this setting at any time.";
+"firstLaunch.notifications.allow.button" = "Allow Notifications";
+"firstLaunch.notifications.later.button" = "Later";
+
+/* Tracking Step */
+"firstLaunch.tracking.title" = "Allow Tracking";
+"firstLaunch.tracking.subtitle" = "Your data will be used to personalize your experience and show relevant ads. We are committed to protecting your privacy.";
+"firstLaunch.tracking.allow.button" = "Allow Tracking";
+"firstLaunch.tracking.noThanks.button" = "No, Thanks";
+
+/* Network Service Errors & Messages */
+"network.error.logoutIncorrect" = "Logout is incorrect. Please try again.";
+"network.error.invalidCredentials" = "The email or password you entered is incorrect. Please try again.";
+"network.error.emailExists" = "An account with this email already exists.";
+"network.error.emailNotFound" = "We couldn't find an account associated with that email address.";
+"network.success.forgotPassword" = "An email has been sent to reset your password.";
+"network.error.incorrectOldPassword" = "The old password you entered is incorrect. Please try again.";
+"network.error.incorrectPassword" = "The password you entered is incorrect. Please try again.";

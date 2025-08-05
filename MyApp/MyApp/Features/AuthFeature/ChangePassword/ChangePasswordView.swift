@@ -13,36 +13,37 @@ struct ChangePasswordView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $store.email)
+            // Reusing a key for consistency
+            TextField("login.email.placeholder", text: $store.email)
                 .textContentType(.emailAddress)
                 .disabled(true)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Old Password", text: $store.oldPassword)
+            SecureField("changePassword.oldPassword.placeholder", text: $store.oldPassword)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Password", text: $store.password)
+            SecureField("changePassword.newPassword.placeholder", text: $store.password)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Confirm Password", text: $store.confirmPassword)
+            SecureField("changePassword.confirmPassword.placeholder", text: $store.confirmPassword)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
             
             if let error = store.error {
-                Text(error).foregroundColor(.red)
+                Text(LocalizedStringKey(error)).foregroundColor(.red)
             }
             
             if store.isLoading {
                 ProgressView()
             } else {
-                Button("Submit Change Password") {
+                Button("changePassword.submit.button") {
                     store.send(.changePasswordTapped)
                 }
             }
             
-            Button("Cancel Change Password") {
+            Button("changePassword.cancel.button") {
                 store.send(.cancelChangePasswordButtonTapped)
             }
             .padding(.top)
@@ -51,7 +52,7 @@ struct ChangePasswordView: View {
         .task {
             store.send(.task)
         }
-        .navigationTitle("Change Password")
+        .navigationTitle("changePassword.screen.title")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -96,7 +97,7 @@ struct ChangePasswordView_Previews: PreviewProvider {
                 store: Store(
                     initialState: {
                         var state = ChangePasswordFeature.State()
-                        state.error = "The old password is not correct."
+                        state.error = "changePassword.error.incorrectOldPassword"
                         return state
                     }()
                 ) {

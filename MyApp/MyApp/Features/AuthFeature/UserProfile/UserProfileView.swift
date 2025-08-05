@@ -13,48 +13,49 @@ struct UserProfileView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            Button("Back To MainTab") {
+            Button("userProfile.backToMain.button") {
                 store.send(.back, animation: .default)
             }
             .padding()
             
             if let user = store.user {
-                Text("Welcome, \(user.name)!")
+                Text(String(format: NSLocalizedString("userProfile.welcome.user", comment: "Welcome message for a named user"), user.name))
                     .font(.title)
                 
                 if let error = store.error {
-                    Text(error).foregroundColor(.red)
+                    Text(LocalizedStringKey(error)).foregroundColor(.red)
                 }
                 
                 if store.isLoading {
                     ProgressView()
                 } else {
-                    Button("Log Out") {
+                    Button("userProfile.logout.button") {
                         store.send(.logoutButtonTapped, animation: .default)
                     }
                     .padding(.top)
                 }
                 
-                Button("Change Password") {
+                Button("userProfile.changePassword.button") {
                     store.send(.changePasswordButtonTapped, animation: .default)
                 }
                 .padding(.top)
                 
-                Button("Delete Account") {
+                Button("userProfile.deleteAccount.button") {
                     store.send(.deleteAccountButtonTapped, animation: .default)
                 }
                 .padding(.top)
                 
             } else {
-                Text("Welcome, Guest!")
+                Text("userProfile.welcome.guest")
                     .font(.title)
-                Button("Login") {
+                // Reusing the key from the login screen
+                Button("login.login.button") {
                     store.send(.loginButtonTapped, animation: .default)
                 }
                 .padding(.top)
             }
         }
-        .navigationTitle("Account")
+        .navigationTitle("userProfile.screen.title")
         .navigationBarBackButtonHidden()
         .onAppear {
             store.send(.onAppear)
@@ -108,7 +109,7 @@ private let thomas = User(id: UUID(), name: "Thomas", email: "thomas@example.com
     NavigationView {
         UserProfileView(
             store: Store(
-                initialState: UserProfileFeature.State(error: "Could not log out. Please try again.")
+                initialState: UserProfileFeature.State(error: NSLocalizedString("userProfile.error.logoutFailed", comment: "Logout error message"))
             ) {
                 UserProfileFeature()
             } withDependencies: {

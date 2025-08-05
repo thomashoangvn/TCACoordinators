@@ -13,23 +13,23 @@ struct DeleteAccountView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            Text("If you delete your account, all your personal information and associated data from the platform's servers will be forfeited.")
+            Text("deleteAccount.warning.message")
                 .padding()
                 .background(Color.yellow.opacity(0.2))
                 .cornerRadius(8)
 
             VStack(alignment: .leading, spacing: 12) {
-                Text("Reason for leaving")
+                Text("deleteAccount.reason.title")
                     .font(.headline)
-                ForEach(store.reasons, id: \.self) { reason in
+                ForEach(store.reasonKeys, id: \.self) { reasonKey in
                     VStack(alignment: .leading) {
                         Button {
-                            store.send(.reasonTapped(reason))
+                            store.send(.reasonTapped(reasonKey))
                         } label: {
                             HStack {
-                                Text(reason)
+                                Text(LocalizedStringKey(reasonKey))
                                 Spacer()
-                                if store.selectedReasons.contains(reason) {
+                                if store.selectedReasonKeys.contains(reasonKey) {
                                     Image(systemName: "checkmark.square.fill")
                                 } else {
                                     Image(systemName: "square")
@@ -37,21 +37,21 @@ struct DeleteAccountView: View {
                             }
                             .foregroundColor(.primary)
                         }
-                        if reason == "Other" && store.selectedReasons.contains("Other") {
-                            TextField("Please specify", text: $store.otherReasonText)
+                        if reasonKey == DeleteAccountFeature.State.otherReasonKey && store.selectedReasonKeys.contains(DeleteAccountFeature.State.otherReasonKey) {
+                            TextField("deleteAccount.otherReason.placeholder", text: $store.otherReasonText)
                                 .textFieldStyle(.roundedBorder)
                                 .transition(.opacity.animation(.default))
                         }
                     }
                 }
             }
-
-            TextField("Email", text: $store.email)
+            // Reusing a key for consistency
+            TextField("login.email.placeholder", text: $store.email)
                 .textContentType(.emailAddress)
                 .disabled(true)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Password", text: $store.password)
+            SecureField("deleteAccount.password.placeholder", text: $store.password)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
 
@@ -60,31 +60,31 @@ struct DeleteAccountView: View {
             } label: {
                 HStack {
                     Image(systemName: store.iConfirm ? "largecircle.fill.circle" : "circle")
-                    Text("I confirm and proceed")
+                    Text("deleteAccount.confirm.checkbox")
                     Spacer()
                 }
             }
             .foregroundColor(.primary)
             
             if let error = store.error {
-                Text(error).foregroundColor(.red)
+                Text(LocalizedStringKey(error)).foregroundColor(.red)
             }
             
             if store.isLoading {
                 ProgressView()
-            } else {
-                Button("Confirm Delete Account") {
+            } else { 
+                Button("deleteAccount.confirm.button") {
                     store.send(.deleteAccountTapped)
                 }
             }
             
-            Button("Cancel Delete Account") {
+            Button("deleteAccount.cancel.button") {
                 store.send(.cancelDeleteAccoutButtonTapped)
             }
             .padding(.top)
         }
         .padding()
-        .navigationTitle("Delete Account")
+        .navigationTitle("deleteAccount.screen.title")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             store.send(.task)
@@ -114,7 +114,7 @@ struct DeleteAccountView_Previews: PreviewProvider {
             DeleteAccountView(
                 store: Store(initialState: {
                     var state = DeleteAccountFeature.State()
-                    state.selectedReasons = ["Bad experience with mobile app", "Other"]
+                    state.selectedReasonKeys = ["deleteAccount.reason.badExperience", "deleteAccount.reason.other"]
                     state.otherReasonText = "The UI is confusing."
                     state.password = "password123"
                     state.iConfirm = true
@@ -147,7 +147,7 @@ struct DeleteAccountView_Previews: PreviewProvider {
             DeleteAccountView(
                 store: Store(initialState: {
                     var state = DeleteAccountFeature.State()
-                    state.error = "Password is required to delete your account."
+                    state.error = "deleteAccount.error.passwordEmpty"
                     return state
                 }()) {
                     DeleteAccountFeature()

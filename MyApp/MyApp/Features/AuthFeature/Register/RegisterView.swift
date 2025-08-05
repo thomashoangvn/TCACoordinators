@@ -6,46 +6,46 @@ struct RegisterView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $store.email)
+            TextField("register.email.placeholder", text: $store.email)
                 .textContentType(.emailAddress)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Password", text: $store.password)
+            SecureField("register.password.placeholder", text: $store.password)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Confirm Password", text: $store.confirmPassword)
+            SecureField("register.confirmPassword.placeholder", text: $store.confirmPassword)
                 .textContentType(.newPassword)
                 .textFieldStyle(.roundedBorder)
             
             if let error = store.error {
-                Text(error).foregroundColor(.red)
+                Text(LocalizedStringKey(error)).foregroundColor(.red)
             }
             
             if store.isLoading {
                 ProgressView()
             } else {
-                Button("Register") {
+                Button("register.register.button") {
                     store.send(.registerTapped)
                 }
             }
-            Button("I have an account. Login") {
+            Button("register.login.button") {
                 store.send(.loginButtonTapped)
             }
             .padding(.top)
             
-            Button("Forgot Password?") {
+            Button("login.forgotPassword.button") {
                 store.send(.forgotPasswordButtonTapped)
             }
             .padding(.top)
             
-            Button("Skip Register") {
+            Button("register.skip.button") {
                 store.send(.skipButtonTapped)
             }
             .padding(.top)
         }
         .padding()
-        .navigationTitle("Register")
+        .navigationTitle("register.screen.title")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -94,7 +94,7 @@ struct RegisterView_Previews: PreviewProvider {
             RegisterView(
                 store: Store(initialState: {
                     var state = RegisterFeature.State()
-                    state.error = "Passwords do not match."
+                    state.error = "register.error.passwordsDoNotMatch"
                     return state
                 }()) {
                     RegisterFeature()

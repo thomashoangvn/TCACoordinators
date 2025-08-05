@@ -68,11 +68,12 @@ struct ChangePasswordFeature {
                 
             case .changePasswordTapped:
                 guard state.user != nil else {
-                    state.error = "Your session has expired. Please log in again."
+                    // Reusing an existing key
+                    state.error = "deleteAccount.error.sessionExpired"
                     return .none
                 }
                 guard state.password == state.confirmPassword else {
-                    state.error = "Passwords do not match"
+                    state.error = "register.error.passwordsDoNotMatch"
                     return .none
                 }
                 state.isLoading = true

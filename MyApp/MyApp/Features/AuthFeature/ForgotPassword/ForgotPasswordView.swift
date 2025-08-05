@@ -13,33 +13,36 @@ struct ForgotPasswordView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $store.email)
+            TextField("forgotPassword.email.placeholder", text: $store.email)
                 .textContentType(.emailAddress)
                 .textFieldStyle(.roundedBorder)
             
             if let error = store.error {
-                Text(error).foregroundColor(.red)
+                Text(LocalizedStringKey(error)).foregroundColor(.red)
             }
             
             if store.isLoading {
                 ProgressView()
             } else {
-                Button("Submit Email") {
+                Button("forgotPassword.submit.button") {
                     store.send(.forgotTapped)
                 }
             }
-            Button("Don't have an account? Register") {
+            // Reusing a key from the login screen for consistency
+            Button("login.register.button") {
                 store.send(.registerButtonTapped)
             }
             .padding(.top)
             
-            Button("Skip") {
+            Button("forgotPassword.skip.button") {
                 store.send(.skipButtonTapped)
             }
             .padding(.top)
             
         }
         .padding()
+        .navigationTitle("forgotPassword.screen.title")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -74,7 +77,7 @@ struct ForgotPasswordView_Previews: PreviewProvider {
             ForgotPasswordView(
                 store: Store(initialState: {
                     var state = ForgotPasswordFeature.State()
-                    state.error = "Email not found."
+                    state.error = NSLocalizedString("forgotPassword.error.emailNotFound", comment: "Error when email is not found")
                     return state
                 }()) {
                     ForgotPasswordFeature()

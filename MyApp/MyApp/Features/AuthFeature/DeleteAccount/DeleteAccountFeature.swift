@@ -14,19 +14,20 @@ struct DeleteAccountFeature {
 
     struct State: Equatable, Hashable {
         let id = UUID()
-        let reasons = [
-            "Bad experience with mobile app",
-            "Don't need the account anymore",
-            "Duplicated enrolment",
-            "Never registered",
-            "Personal reason",
-            "Other"
+        static let otherReasonKey = "deleteAccount.reason.other"
+        let reasonKeys = [
+            "deleteAccount.reason.badExperience",
+            "deleteAccount.reason.noLongerNeeded",
+            "deleteAccount.reason.duplicate",
+            "deleteAccount.reason.neverRegistered",
+            "deleteAccount.reason.personal",
+            Self.otherReasonKey
         ]
 
         var user: User?
         var email: String = ""
         var password: String = ""
-        var selectedReasons: [String] = []
+        var selectedReasonKeys: [String] = []
         var otherReasonText: String = ""
         var iConfirm = false
         var isLoading = false
@@ -77,42 +78,47 @@ struct DeleteAccountFeature {
                 }
                 return .none
                 
-            case let .reasonTapped(reason):
-                if let index = state.selectedReasons.firstIndex(of: reason) {
-                    state.selectedReasons.remove(at: index)
-                    if reason == "Other" {
+            case let .reasonTapped(reasonKey):
+                if let index = state.selectedReasonKeys.firstIndex(of: reasonKey) {
+                    state.selectedReasonKeys.remove(at: index)
+                    if reasonKey == State.otherReasonKey {
                         state.otherReasonText = ""
                     }
                 } else {
-                    state.selectedReasons.append(reason)
+                    state.selectedReasonKeys.append(reasonKey)
                 }
                 return .none
             case .deleteAccountTapped:
                 guard state.user != nil else {
-                    state.error = "Your session has expired. Please log in again."
+                    state.error = "deleteAccount.error.sessionExpired"
                     return .none
                 }
                 guard !state.password.isEmpty else {
-                    state.error = "Passwords do not empty"
+                    state.error = "deleteAccount.error.passwordEmpty"
                     return .none
                 }
-                guard !state.selectedReasons.isEmpty else {
-                    state.error = "Please select at least one reason for deleting your account."
+                guard !state.selectedReasonKeys.isEmpty else {
+                    state.error = "deleteAccount.error.noReasonSelected"
                     return .none
                 }
-                if state.selectedReasons.contains("Other"), state.otherReasonText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    state.error = "Please specify your reason in the 'Other' field."
+                if state.selectedReasonKeys.contains(State.otherReasonKey), state.otherReasonText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    state.error = "deleteAccount.error.otherReasonEmpty"
                     return .none
                 }
                 guard state.iConfirm else {
-                    state.error = "Please confirm you want to delete your account."
+                    state.error = "deleteAccount.error.confirmationRequired"
                     return .none
                 }
                 state.isLoading = true
                 state.error = nil
-                var finalReasons = state.selectedReasons.filter { $0 != "Other" }
-                if state.selectedReasons.contains("Other") {
-                    finalReasons.append("Other: \(state.otherReasonText.trimmingCharacters(in: .whitespacesAndNewlines))")
+                
+                // Convert keys to localized strings for the backend service.
+                var finalReasons = state.selectedReasonKeys
+                    .filter { $0 != State.otherReasonKey }
+                    .map { NSLocalizedString($0, comment: "") }
+                if state.selectedReasonKeys.contains(State.otherReasonKey) {
+                    let otherLocalized = NSLocalizedString(State.otherReasonKey, comment: "")
+                    finalReasons.append("\(otherLocalized): \(state.otherReasonText.trimmingCharacters(in: .whitespacesAndNewlines))")
                 }
                 return .run { [email = state.email, password = state.password, finalReasons] send in
                     await send(.deleteAccountResponse(

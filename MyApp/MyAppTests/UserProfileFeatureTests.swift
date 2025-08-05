@@ -1,15 +1,14 @@
 //
 //  UserProfileFeatureTests.swift
-//  MyApp
+//  MyAppTests
 //
-//  Created by Thomas Hoang on 8/3/25.
+//  Created by Thomas Hoang on 8/5/25.
 //
 
 import Foundation
 import Testing
 import ComposableArchitecture
 @testable import MyApp
-
 
 @MainActor
 struct UserProfileFeatureTests {
@@ -20,7 +19,7 @@ struct UserProfileFeatureTests {
         let userSession = UserSession(service: "test-session")
         userSession.user = nil
         // user is nil by default in a new UserSession, so no need to set it explicitly.
-
+        
         let store = TestStore(initialState: UserProfileFeature.State()) {
             UserProfileFeature()
         } withDependencies: {
@@ -34,7 +33,7 @@ struct UserProfileFeatureTests {
         // Giờ mới test hành động nhấn nút
         await store.send(.loginButtonTapped)
         await store.receive(\.delegate.didTapLogin)
-
+        
         // Dọn dẹp: huỷ subscription khi view biến mất.
         // Điều này giả định UserProfileFeature đã được cập nhật để xử lý .onDisappear.
         await store.send(.onDisappear)
@@ -75,15 +74,15 @@ struct UserProfileFeatureTests {
             $0.isLoading = false
             $0.user = nil
         }
-               
+        
         // Khẳng định rằng side effect (xoá user khỏi session) đã được reducer thực hiện.
         #expect(userSession.user == nil)
-
+        
         // Reducer trả về một effect .send cho delegate action, và nó được TestStore xử lý ngay lập tức.
         await store.receive(\.delegate.didLogout)
         // Tiếp theo, subscription dài hạn từ .onAppear phát hiện sự thay đổi trong user session và gửi lại action .userUpdated.
         await store.receive(\.userUpdated, nil)
-
+        
         // Dọn dẹp: huỷ subscription khi view biến mất
         await store.send(.onDisappear)
         await task.cancel()
@@ -121,7 +120,7 @@ struct UserProfileFeatureTests {
         // Khẳng định user vẫn còn trong state và session
         #expect(store.state.user == self.user)
         #expect(userSession.user == self.user)
-
+        
         // Dọn dẹp: huỷ subscription khi view biến mất
         await store.send(.onDisappear)
         await task.cancel()
@@ -144,7 +143,7 @@ struct UserProfileFeatureTests {
         
         await store.send(.changePasswordButtonTapped)
         await store.receive(\.delegate.didTapChangePassword)
-
+        
         // Dọn dẹp: huỷ subscription khi view biến mất
         await store.send(.onDisappear)
         await task.cancel()
@@ -167,7 +166,7 @@ struct UserProfileFeatureTests {
         
         await store.send(.deleteAccountButtonTapped)
         await store.receive(\.delegate.didTapDeleteAccount)
-
+        
         // Dọn dẹp: huỷ subscription khi view biến mất
         await store.send(.onDisappear)
         await task.cancel()

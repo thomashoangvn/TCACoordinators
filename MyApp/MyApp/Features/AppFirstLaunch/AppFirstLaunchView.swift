@@ -54,13 +54,13 @@ private struct WelcomeStepView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.accentColor)
             
-            Text("Welcome to MyApp!")
+            Text("firstLaunch.welcome.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
-            Text("Experience a safe, reliable service that will accompany you for the long term.")
+            Text("firstLaunch.welcome.subtitle")
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
@@ -68,7 +68,7 @@ private struct WelcomeStepView: View {
             
             Spacer()
             
-            Button("Continue") {
+            Button("firstLaunch.welcome.continue.button") {
                 store.send(.nextButtonTapped)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -85,7 +85,7 @@ private struct TermsStepView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("Terms & Policies")
+            Text("firstLaunch.terms.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.top)
@@ -103,8 +103,8 @@ private struct TermsStepView: View {
                 .tabViewStyle(.page(indexDisplayMode: .never))
                 .overlay(
                     Picker("", selection: $selectedTab) {
-                        Text("Terms of Service").tag(0)
-                        Text("Privacy Policy").tag(1)
+                        Text("firstLaunch.terms.termsOfService.tab").tag(0)
+                        Text("firstLaunch.terms.privacyPolicy.tab").tag(1)
                     }
                     .pickerStyle(.segmented)
                     .padding([.horizontal, .top]),
@@ -114,7 +114,7 @@ private struct TermsStepView: View {
                 .padding(.horizontal)
             } else if store.error == nil {
                 Spacer()
-                ProgressView("Loading...")
+                ProgressView("firstLaunch.terms.loading")
                 Spacer()
             } else if let error = store.error {
                 Spacer()
@@ -130,7 +130,7 @@ private struct TermsStepView: View {
                 } label: {
                     HStack {
                         Image(systemName: store.hasAcceptedTerms ? "largecircle.fill.circle" : "circle")
-                        Text("I have read and agree to the terms of service.")
+                        Text("firstLaunch.terms.agreeToTerms.checkbox")
                         Spacer()
                     }
                 }
@@ -141,7 +141,7 @@ private struct TermsStepView: View {
                 } label: {
                     HStack {
                         Image(systemName: store.hasAcceptedPolicy ? "largecircle.fill.circle" : "circle")
-                        Text("I have read and agree to the privacy policy.")
+                        Text("firstLaunch.terms.agreeToPolicy.checkbox")
                         Spacer()
                     }
                 }
@@ -149,7 +149,7 @@ private struct TermsStepView: View {
             }
             .padding(.horizontal)
 
-            Button("Agree and Continue") {
+            Button("firstLaunch.terms.agreeAndContinue.button") {
                 store.send(.acceptAgreementsButtonTapped)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -182,13 +182,13 @@ private struct NotificationsStepView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.accentColor)
             
-            Text("Enable Notifications")
+            Text("firstLaunch.notifications.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
-            Text("We will send you important updates and special offers. You can change this setting at any time.")
+            Text("firstLaunch.notifications.subtitle")
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
@@ -197,12 +197,11 @@ private struct NotificationsStepView: View {
             Spacer()
             
             VStack {
-                Button("Allow Notifications") {
+                Button("firstLaunch.notifications.allow.button") {
                     store.send(.requestNotificationPermissionButtonTapped)
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                
-                Button("Later") {
+                Button("firstLaunch.notifications.later.button") {
                     // Theo yêu cầu của App Store, vẫn phải hiển thị hộp thoại xin phép.
                     store.send(.requestNotificationPermissionButtonTapped)
                 }
@@ -224,13 +223,13 @@ private struct TrackingStepView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.accentColor)
             
-            Text("Allow Tracking")
+            Text("firstLaunch.tracking.title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             
-            Text("Your data will be used to personalize your experience and show relevant ads. We are committed to protecting your privacy.")
+            Text("firstLaunch.tracking.subtitle")
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
@@ -239,12 +238,11 @@ private struct TrackingStepView: View {
             Spacer()
             
             VStack {
-                Button("Allow Tracking") {
+                Button("firstLaunch.tracking.allow.button") {
                     store.send(.requestTrackingPermissionButtonTapped)
                 }
                 .buttonStyle(PrimaryButtonStyle())
-                
-                Button("No, Thanks") {
+                Button("firstLaunch.tracking.noThanks.button") {
                     // Theo yêu cầu của App Store, vẫn phải hiển thị hộp thoại xin phép.
                     store.send(.requestTrackingPermissionButtonTapped)
                 }
@@ -314,7 +312,7 @@ struct TermsStepView_Previews: PreviewProvider {
                 store: Store(
                     initialState: AppFirstLaunchFeature.State(
                         step: .terms,
-                        error: "Could not load content. Please try again."
+                        error: NSLocalizedString("firstLaunch.error.loadFailed.generic", comment: "Generic error for preview")
                     )
                 ) {
                     AppFirstLaunchFeature()

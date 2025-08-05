@@ -7,44 +7,44 @@ struct LoginView: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: $store.email)
+            TextField("login.email.placeholder", text: $store.email)
                 .textContentType(.emailAddress)
                 .textFieldStyle(.roundedBorder)
             
-            SecureField("Password", text: $store.password)
+            SecureField("login.password.placeholder", text: $store.password)
                 .textContentType(.password)
                 .textFieldStyle(.roundedBorder)
             
             if let error = store.error {
-                Text(error).foregroundColor(.red)
+                Text(LocalizedStringKey(error)).foregroundColor(.red)
             }
             
             if store.isLoading {
                 ProgressView()
             } else {
-                Button("Login") {
+                Button("login.login.button") {
                     store.send(.loginTapped)
                 }
             }
             
-            Button("Don't have an account? Register") {
+            Button("login.register.button") {
                 store.send(.registerButtonTapped)
             }
             .padding(.top)
             
-            Button("Skip Login") {
+            Button("login.skip.button") {
                 store.send(.skipButtonTapped)
             }
             .padding(.top)
             
-            Button("forgotPassword") {
+            Button("login.forgotPassword.button") {
                 store.send(.forgotPasswordButtonTapped)
             }
             .padding(.top)
             
         }
         .padding()
-        .navigationTitle("Login")
+        .navigationTitle("login.screen.title")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -92,7 +92,7 @@ struct LoginView_Previews: PreviewProvider {
             LoginView(
                 store: Store(initialState: {
                     var state = LoginFeature.State()
-                    state.error = "Invalid email or password."
+                    state.error = "network.error.invalidCredentials"
                     return state
                 }()) {
                     LoginFeature()

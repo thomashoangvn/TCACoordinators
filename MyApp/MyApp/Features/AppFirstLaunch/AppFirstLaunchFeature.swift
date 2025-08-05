@@ -105,7 +105,8 @@ struct AppFirstLaunchFeature {
                 
             case let .termsResponse(.failure(error)):
                 state.isLoading = false
-                state.error = "Could not load terms or policy: \(error.message)"
+                let format = NSLocalizedString("firstLaunch.error.loadFailed", comment: "Error message when terms/policy fail to load")
+                state.error = String(format: format, error.message)
                 return .none
                 
             case let .policyResponse(.success(content)):
@@ -117,7 +118,8 @@ struct AppFirstLaunchFeature {
                 
             case let .policyResponse(.failure(error)):
                 state.isLoading = false
-                state.error = "Could not load terms or policy: \(error.message)"
+                let format = NSLocalizedString("firstLaunch.error.loadFailed", comment: "Error message when terms/policy fail to load")
+                state.error = String(format: format, error.message)
                 return .none
                 
             case .acceptAgreementsButtonTapped:

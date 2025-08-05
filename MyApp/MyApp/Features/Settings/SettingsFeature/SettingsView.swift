@@ -20,7 +20,7 @@ struct SettingsView: View {
             }
         }
         .padding()
-        .navigationTitle("Settings")
+        .navigationTitle("settings.screen.title")
         .onAppear {
             store.send(.onAppear)
         }
@@ -31,9 +31,10 @@ struct SettingsView: View {
     
     @ViewBuilder
     private func userContentView(_ user: User) -> some View {
-        Text("Welcome, \(user.name)!")
+        // Reusing key from UserProfileView
+        Text(String(format: NSLocalizedString("userProfile.welcome.user", comment: "Welcome message for a named user"), user.name))
             .font(.title)
-        Button("User Profile") {
+        Button("settings.userProfile.button") {
             store.send(.profileTapped, animation: .default)
         }
         .padding(.top)
@@ -41,9 +42,11 @@ struct SettingsView: View {
     
     @ViewBuilder
     private var guestContentView: some View {
-        Text("Welcome, Guest!")
+        // Reusing key from UserProfileView
+        Text("userProfile.welcome.guest")
             .font(.title)
-        Button("Login") {
+        // Reusing key from LoginView
+        Button("login.login.button") {
             store.send(.loginButtonTapped, animation: .default)
         }
         .padding(.top)
