@@ -241,7 +241,7 @@ extension UserNotificationsClient: DependencyKey {
             try await UNUserNotificationCenter.current().requestAuthorization(options: options)
         }
     )
-      
+    
     static let testValue = Self(
         requestAuthorization: unimplemented("\(Self.self).requestAuthorization")
     )
@@ -264,7 +264,7 @@ extension AppTrackingClient: DependencyKey {
             await ATTrackingManager.requestTrackingAuthorization()
         }
     )
-     
+    
     static let testValue = Self(
         requestAuthorization: unimplemented("\(Self.self).requestAuthorization")
     )

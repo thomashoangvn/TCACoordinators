@@ -17,8 +17,8 @@ struct MyAppCoordinator {
     }
     @CasePathable
     enum Action {
-        case task
         case firstLaunch(AppFirstLaunchFeature.Action)
+        case splash(AppSplashFeature.Action)
         case setStatusIndexStateSelected(StatusIndexState)
         case auth(AuthCoordinator.Action)
         case loggedIn(MainTabCoordinator.Action)
@@ -27,15 +27,16 @@ struct MyAppCoordinator {
     @ObservableState
     struct State: Equatable {
         var statusIndexselected: StatusIndexState
+        var splash: AppSplashFeature.State
         var firstLaunch: AppFirstLaunchFeature.State
         var auth: AuthCoordinator.State
         var loggedIn: MainTabCoordinator.State
         
         init() {
+            self.splash = .init()
             self.firstLaunch = .init()
             self.auth = .initialState
             self.loggedIn = .initialState
-            // Bắt đầu ở trạng thái trung gian, để action `.task` quyết định luồng đi.
             self.statusIndexselected = .splash
         }
     }
@@ -45,6 +46,10 @@ struct MyAppCoordinator {
     @Dependency(\.userDefaultsService) var userDefaultsService
     
     var body: some ReducerOf<Self> {
+        Scope(state: \.splash, action: \.splash) {
+            AppSplashFeature()
+        }
+        
         Scope(state: \.firstLaunch, action: \.firstLaunch) {
             AppFirstLaunchFeature()
         }
@@ -59,23 +64,25 @@ struct MyAppCoordinator {
         
         Reduce { state, action in
             switch action {
-            case .task:
-                if !self.userDefaultsService.isNotFirstLaunchApp {
-                    // Lần đầu tiên mở ứng dụng, chuyển đến màn hình giới thiệu/onboarding.
-                    state.statusIndexselected = .firstLaunch
-                    // Đánh dấu là đã qua lần khởi chạy đầu tiên.
-                    self.userDefaultsService.isNotFirstLaunchApp = true
-                } else {
-                    if let user = self.userSession.user, user.token.expiresAt > Date() {
-                        // Nếu có token hợp lệ và chưa hết hạn, chuyển sang trạng thái đã đăng nhập.
-                        state.statusIndexselected = .loggedIn
+            case .splash(.delegate(.didFinishSplash)):
+                return .run { send in
+                    if !self.userDefaultsService.isNotFirstLaunchApp {
+                        // Lần đầu tiên mở ứng dụng, chuyển đến màn hình giới thiệu/onboarding.
+                        await send(.setStatusIndexStateSelected(.firstLaunch))
+                        // Đánh dấu là đã qua lần khởi chạy đầu tiên.
+                        self.userDefaultsService.isNotFirstLaunchApp = true
                     } else {
-                        // Nếu không, chuyển sang luồng xác thực và xoá session đã hết hạn.
-                        self.userSession.user = nil
-                        state.statusIndexselected = .auth
+                        if let user = self.userSession.user, user.token.expiresAt > Date() {
+                            // Nếu có token hợp lệ và chưa hết hạn, chuyển sang trạng thái đã đăng nhập.
+                            await send(.setStatusIndexStateSelected(.loggedIn))
+                        } else {
+                            // Nếu không, chuyển sang luồng xác thực và xoá session đã hết hạn.
+                            self.userSession.user = nil
+                            await send(.setStatusIndexStateSelected(.auth))
+                        }
                     }
                 }
-                
+
             case .firstLaunch(.delegate(.didFinishFirstLaunch)):
                 state.statusIndexselected = .auth
                 
@@ -118,7 +125,7 @@ struct MyAppCoordinator {
                 state.statusIndexselected = .auth
                 state.auth.routes.goBackToRoot()
                 
-            case .firstLaunch, .auth, .loggedIn:
+            case .firstLaunch, .auth, .loggedIn, .splash:
                 break
                 
             case let .setStatusIndexStateSelected(index):
@@ -147,7 +154,12 @@ struct MyAppCoordinatorView: View {
                     )
                 )
             case .splash:
-                Text("splash")
+                AppSplashView(
+                    store: store.scope(
+                        state: \.splash,
+                        action: \.splash
+                    )
+                )
             case .auth:
                 AuthCoordinatorView(
                     store: store.scope(
@@ -159,9 +171,6 @@ struct MyAppCoordinatorView: View {
                 MainTabCoordinatorView(store: store.scope(state: \.loggedIn, action: \.loggedIn))
                 
             }
-        }
-        .onAppear {
-            store.send(.task)
         }
     }
 }
