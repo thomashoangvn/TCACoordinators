@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AppTrackingTransparency
 
 // MARK: - UserDefaults extensions
 
@@ -61,7 +62,7 @@ public extension UserDefaults {
 
 /// Một service để quản lý việc đọc/ghi dữ liệu vào UserDefaults.
 /// Service này được thiết kế để tích hợp với hệ thống Dependency của TCA.
-struct UserDefaultsService {
+final class UserDefaultsService {
     
     // Sử dụng một enum để quản lý các key một cách an toàn, tránh lỗi chính tả.
     private enum Key {
@@ -69,6 +70,7 @@ struct UserDefaultsService {
         static let isTutorialCompleted = "is_tutorial_completed"
         static let appLanguage = "app_language"
         static let isNotificationOn = "is_notification_on"
+        static let trackingAuthorizationStatus = "tracking_authorization_status"
     }
     
     private let userDefaults: UserDefaults
@@ -106,5 +108,16 @@ struct UserDefaultsService {
     var isNotificationOn: Bool {
         get { userDefaults.bool(forKey: Key.isNotificationOn) }
         set { userDefaults.set(newValue, forKey: Key.isNotificationOn) }
+    }
+    
+    /// Trạng thái cấp phép theo dõi của người dùng.
+    /// Mặc định là `.notDetermined`.
+    var trackingAuthorizationStatus: ATTrackingManager.AuthorizationStatus {
+        get {
+            // Lấy giá trị raw value từ UserDefaults, mặc định là 0 (.notDetermined)
+            let rawValue = userDefaults.integer(forKey: Key.trackingAuthorizationStatus)
+            return ATTrackingManager.AuthorizationStatus(rawValue: UInt(rawValue)) ?? .notDetermined
+        }
+        set { userDefaults.set(newValue.rawValue, forKey: Key.trackingAuthorizationStatus) }
     }
 }

@@ -18,6 +18,7 @@ struct MyAppCoordinator {
     @CasePathable
     enum Action {
         case task
+        case firstLaunch(AppFirstLaunchFeature.Action)
         case setStatusIndexStateSelected(StatusIndexState)
         case auth(AuthCoordinator.Action)
         case loggedIn(MainTabCoordinator.Action)
@@ -26,10 +27,12 @@ struct MyAppCoordinator {
     @ObservableState
     struct State: Equatable {
         var statusIndexselected: StatusIndexState
+        var firstLaunch: AppFirstLaunchFeature.State
         var auth: AuthCoordinator.State
         var loggedIn: MainTabCoordinator.State
         
         init() {
+            self.firstLaunch = .init()
             self.auth = .initialState
             self.loggedIn = .initialState
             // Bắt đầu ở trạng thái trung gian, để action `.task` quyết định luồng đi.
@@ -39,8 +42,13 @@ struct MyAppCoordinator {
     
     @Dependency(\.appLogger) var logger
     @Dependency(\.userSession) var userSession
+    @Dependency(\.userDefaultsService) var userDefaultsService
     
     var body: some ReducerOf<Self> {
+        Scope(state: \.firstLaunch, action: \.firstLaunch) {
+            AppFirstLaunchFeature()
+        }
+        
         Scope(state: \.auth, action: \.auth) {
             AuthCoordinator()
         }
@@ -52,14 +60,24 @@ struct MyAppCoordinator {
         Reduce { state, action in
             switch action {
             case .task:
-                if let user = self.userSession.user, user.token.expiresAt > Date() {
-                    // Nếu có token hợp lệ và chưa hết hạn, chuyển sang trạng thái đã đăng nhập.
-                    state.statusIndexselected = .loggedIn
+                if !self.userDefaultsService.isNotFirstLaunchApp {
+                    // Lần đầu tiên mở ứng dụng, chuyển đến màn hình giới thiệu/onboarding.
+                    state.statusIndexselected = .firstLaunch
+                    // Đánh dấu là đã qua lần khởi chạy đầu tiên.
+                    self.userDefaultsService.isNotFirstLaunchApp = true
                 } else {
-                    // Nếu không, chuyển sang luồng xác thực và xoá session đã hết hạn.
-                    self.userSession.user = nil
-                    state.statusIndexselected = .auth
+                    if let user = self.userSession.user, user.token.expiresAt > Date() {
+                        // Nếu có token hợp lệ và chưa hết hạn, chuyển sang trạng thái đã đăng nhập.
+                        state.statusIndexselected = .loggedIn
+                    } else {
+                        // Nếu không, chuyển sang luồng xác thực và xoá session đã hết hạn.
+                        self.userSession.user = nil
+                        state.statusIndexselected = .auth
+                    }
                 }
+                
+            case .firstLaunch(.delegate(.didFinishFirstLaunch)):
+                state.statusIndexselected = .auth
                 
             case let .auth(.delegate(.didLoginSuccessfully(user))):
                 state.statusIndexselected = .loggedIn
@@ -100,7 +118,7 @@ struct MyAppCoordinator {
                 state.statusIndexselected = .auth
                 state.auth.routes.goBackToRoot()
                 
-            case .auth, .loggedIn:
+            case .firstLaunch, .auth, .loggedIn:
                 break
                 
             case let .setStatusIndexStateSelected(index):
@@ -123,7 +141,11 @@ struct MyAppCoordinatorView: View {
         VStack {
             switch store.statusIndexselected {
             case .firstLaunch:
-                Text("firstLaunch")
+                AppFirstLaunchView(store: store.scope(
+                        state: \.firstLaunch,
+                        action: \.firstLaunch
+                    )
+                )
             case .splash:
                 Text("splash")
             case .auth:
